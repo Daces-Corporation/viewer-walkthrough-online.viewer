@@ -237,3 +237,50 @@ app.get('/api/forge/modelderivative/:urn', function (req, res) {
             res.send('Error at Model Derivative job.');
         });
 });
+
+// Route /api/forge/modelderivative/list
+app.get('/api/forge/modelderivative/list/:urn/:guid', function (req, res) {
+    var urn = req.params.urn;
+    var guid = req.params.guid;
+    Axios({
+        method: 'GET',
+        url: `https://developer.api.autodesk.com/modelderivative/v2/designdata/${urn}/metadata/${guid}/properties`,
+        headers: {
+            'content-type': 'application/json',
+            Authorization: 'Bearer ' + access_token
+        }
+    })
+        .then(function (response) {
+            // Success
+            console.log(response);
+            res.json({ data: response.data });
+        })
+        .catch(function (error) {
+            // Failed
+            console.log(error);
+            res.send('Error at Model Derivative get properties.');
+        });
+});
+
+// Route /api/forge/modelderivative/get
+app.get('/api/forge/modelderivative/get/:urn', function (req, res) {
+    var urn = req.params.urn;
+    Axios({
+        method: 'GET',
+        url: `https://developer.api.autodesk.com/modelderivative/v2/designdata/${urn}/metadata`,
+        headers: {
+            'content-type': 'application/json',
+            Authorization: 'Bearer ' + access_token
+        }
+    })
+        .then(function (response) {
+            // Success
+            console.log(response);
+            res.json({ guid: response.data.data.metadata[0].guid });
+        })
+        .catch(function (error) {
+            // Failed
+            console.log(error);
+            res.send('Error at Model Derivative get metadata.');
+        });
+});
