@@ -244,6 +244,30 @@ app.get('/api/forge/modelderivative/list/:urn/:guid', function (req, res) {
     var guid = req.params.guid;
     Axios({
         method: 'GET',
+        url: `https://developer.api.autodesk.com/modelderivative/v2/designdata/${urn}/metadata/${guid}`,
+        headers: {
+            'content-type': 'application/json',
+            Authorization: 'Bearer ' + access_token
+        }
+    })
+        .then(function (response) {
+            // Success
+            console.log(response);
+            res.json({ data: response.data });
+        })
+        .catch(function (error) {
+            // Failed
+            console.log(error);
+            res.send('Error at Model Derivative get objects.');
+        });
+});
+
+// Route /api/forge/modelderivative/detailslist
+app.get('/api/forge/modelderivative/detailslist/:urn/:guid', function (req, res) {
+    var urn = req.params.urn;
+    var guid = req.params.guid;
+    Axios({
+        method: 'GET',
         url: `https://developer.api.autodesk.com/modelderivative/v2/designdata/${urn}/metadata/${guid}/properties`,
         headers: {
             'content-type': 'application/json',
@@ -258,7 +282,7 @@ app.get('/api/forge/modelderivative/list/:urn/:guid', function (req, res) {
         .catch(function (error) {
             // Failed
             console.log(error);
-            res.send('Error at Model Derivative get properties.');
+            res.send('Error at Model Derivative get objects properties.');
         });
 });
 
