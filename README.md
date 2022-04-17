@@ -79,3 +79,27 @@ This sample is licensed under the terms of the [MIT License](http://opensource.o
 
 # Support
 forge.help@autodesk.com
+
+# CLI run
+```
+export TOKEN=$(curl -s -X POST \
+    'https://developer.api.autodesk.com/authentication/v1/authenticate' \
+    -H 'Content-Type: application/x-www-form-urlencoded' \
+    -d "client_id=$FORGE_CLIENT_ID" \
+    -d "client_secret=$FORGE_CLIENT_SECRET" \
+    -d 'grant_type=client_credentials' \
+    -d 'scope=data:write data:read bucket:create bucket:delete' | \
+    python3 -c "import sys, json; print(json.load(sys.stdin)['access_token'])")
+# Get GUID
+curl  -X GET \
+      "https://developer.api.autodesk.com/modelderivative/v2/designdata/$URL_SAFE_URN_OF_SOURCE_FILE/metadata" \
+      -H "Authorization: Bearer $TOKEN"
+# Get minimal list
+curl  -X GET \
+      "https://developer.api.autodesk.com/modelderivative/v2/designdata/$URL_SAFE_URN_OF_SOURCE_FILE/metadata/$GUID_OF_MODEL_VIEW" \
+      -H "Authorization: Bearer $TOKEN"
+# Get detail list
+curl  -X GET \
+      "https://developer.api.autodesk.com/modelderivative/v2/designdata/$URL_SAFE_URN_OF_SOURCE_FILE/metadata/$GUID_OF_MODEL_VIEW/properties" \
+      -H "Authorization: Bearer $TOKEN"
+```
